@@ -1,0 +1,68 @@
+.title-text {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.subtitle-text {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.plain-text {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+}
+
+.button-text {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+.styled-table {
+    background-color: rgb(207, 226, 255);
+    border-collapse: collapse;
+    border-radius: 20px;
+    margin: 5% auto;
+}
+
+th,
+td,
+caption {
+    padding: 15px;
+}
+
+.acciones-menu {
+    display: inline-flex;
+    flex-direction: column;
+    min-width: 180px;
+    max-width: 280px;
+}
+
+.acciones-menu-item {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+
+    user-select: none;
+    min-width: 64px;
+    line-height: 36px;
+
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex: 1;
+}
+
+.acciones-menu-item:hover {
+    background-color: rgb(210, 210, 210);
+    border-radius: 20px;
+}
+
+.acciones-menu-item:active {
+    background-color: rgb(170, 170, 170);
+    border-radius: 20px;
+}
