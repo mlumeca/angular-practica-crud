@@ -1,0 +1,78 @@
+<div>
+    <div class="">
+        <table class="styled-table">
+            <caption class="title-text">
+                Coches de la API
+            </caption>
+            <thead>
+                <tr>
+                    <th class="subtitle-text">ID</th>
+                    <th class="subtitle-text">Marca</th>
+                    <th class="subtitle-text">Modelo</th>
+                    <th class="subtitle-text">Total</th>
+                    <th class="subtitle-text">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="plain-text">0001</td>
+                    <td class="plain-text">Toyota</td>
+                    <td class="plain-text">Fiesta</td>
+                    <td class="plain-text">50000€</td>
+                    <td>
+                        <div class="acciones-menu" cdkMenu>
+                            <button
+                                class="acciones-menu-item"
+                                routerLink="/edit"
+                                class="plain-text"
+                                cdkMenuItem
+                            >
+                                Editar
+                            </button>
+                            <button
+                                class="acciones-menu-item"
+                                routerLink="/delete"
+                                class="plain-text"
+                                cdkMenuItem
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="plain-text">0002</td>
+                    <td class="plain-text">Toyota</td>
+                    <td class="plain-text">Fiesta</td>
+                    <td class="plain-text">50000€</td>
+                    <td>
+                        <div class="acciones-menu" cdkMenu>
+                            <button
+                                class="acciones-menu-item"
+                                routerLink="/edit"
+                                class="plain-text"
+                                cdkMenuItem
+                            >
+                                Editar
+                            </button>
+                            <button
+                                class="acciones-menu-item"
+                                routerLink="/delete"
+                                class="plain-text"
+                                cdkMenuItem
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <button routerLink="/create" mat-stroked-button class="button-text">
+            Crear Nuevo
+        </button>
+    </div>
+</div>
