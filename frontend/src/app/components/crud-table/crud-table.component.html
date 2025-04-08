@@ -14,59 +14,34 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="plain-text">0001</td>
-                    <td class="plain-text">Toyota</td>
-                    <td class="plain-text">Fiesta</td>
-                    <td class="plain-text">50000€</td>
-                    <td>
-                        <div class="acciones-menu" cdkMenu>
-                            <button
-                                class="acciones-menu-item"
-                                routerLink="/edit"
-                                class="plain-text"
-                                cdkMenuItem
-                            >
-                                Editar
-                            </button>
-                            <button
-                                class="acciones-menu-item"
-                                routerLink="/delete"
-                                class="plain-text"
-                                cdkMenuItem
-                            >
-                                Eliminar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="plain-text">0002</td>
-                    <td class="plain-text">Toyota</td>
-                    <td class="plain-text">Fiesta</td>
-                    <td class="plain-text">50000€</td>
-                    <td>
-                        <div class="acciones-menu" cdkMenu>
-                            <button
-                                class="acciones-menu-item"
-                                routerLink="/edit"
-                                class="plain-text"
-                                cdkMenuItem
-                            >
-                                Editar
-                            </button>
-                            <button
-                                class="acciones-menu-item"
-                                routerLink="/delete"
-                                class="plain-text"
-                                cdkMenuItem
-                            >
-                                Eliminar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                @for (car of cars; track car.id) {
+                    <tr>
+                        <td class="plain-text">{{car.id}}</td>
+                        <td class="plain-text">{{car.model}}</td>
+                        <td class="plain-text">{{car.brand}}</td>
+                        <td class="plain-text">{{car.total}}</td>
+                        <td>
+                            <div class="acciones-menu" cdkMenu>
+                                <button
+                                    class="acciones-menu-item"
+                                    routerLink="/edit"
+                                    class="plain-text"
+                                    cdkMenuItem
+                                >
+                                    Editar
+                                </button>
+                                <button
+                                    class="acciones-menu-item"
+                                    routerLink="/delete"
+                                    class="plain-text"
+                                    cdkMenuItem
+                                >
+                                    Eliminar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
