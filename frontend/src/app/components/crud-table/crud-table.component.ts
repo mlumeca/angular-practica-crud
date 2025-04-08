@@ -1,6 +1,8 @@
 import {CdkMenu, CdkMenuItem} from '@angular/cdk/menu';
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
+import {CarListResponse} from '../../models/car-list.interface';
+import {CarsService} from '../../services/cars.service';
 
 @Component({
     selector: 'app-crud-table',
@@ -9,4 +11,14 @@ import {MatButtonModule} from '@angular/material/button';
     templateUrl: './crud-table.component.html',
     styleUrl: './crud-table.component.css',
 })
-export class CrudTableComponent {}
+export class CrudTableComponent implements OnInit {
+    cars: CarListResponse[] = [];
+
+    constructor(private carsService: CarsService) {}
+
+    ngOnInit(): void {
+        this.carsService.getCars().subscribe(resp => {
+            this.cars = resp;
+        });
+    }
+}
