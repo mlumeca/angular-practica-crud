@@ -25,7 +25,7 @@
                             </p>
                             <p>
                                 <span class="label">Precio:</span>
-                                {{ item.price }} {{ item.currency }}
+                                {{ item.price | currency: item.currency :'symbol'}}
                             </p>
                             <p>
                                 <span class="label">Matrícula:</span>
@@ -37,7 +37,7 @@
                             </p>
                             <p>
                                 <span class="label">Kilometraje:</span>
-                                {{ item.mileage }} Km
+                                {{ item.mileage | number : '1.2-2'}} Km
                             </p>
                             <p>
                                 <span class="label">Registro:</span>

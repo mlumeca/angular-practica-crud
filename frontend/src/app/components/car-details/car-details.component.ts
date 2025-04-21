@@ -1,3 +1,4 @@
+import {CurrencyPipe, DecimalPipe} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {CAR_BRANDS} from '../../models/car-brands.interface';
@@ -7,7 +8,7 @@ import {CarsService} from '../../services/cars.service';
 
 @Component({
     selector: 'app-car-details',
-    imports: [CarConditionPipe],
+    imports: [CarConditionPipe, CurrencyPipe, DecimalPipe],
     templateUrl: './car-details.component.html',
     styleUrl: './car-details.component.css',
 })
