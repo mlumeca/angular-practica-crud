@@ -15,10 +15,16 @@
             </thead>
             <tbody>
                 @for (car of cars; track car.id) {
-                    <tr>
+                    <tr [routerLink]="['/cars', car.id]">
                         <td class="plain-text">{{car.id}}</td>
                         <td class="plain-text">{{car.model}}</td>
-                        <td class="plain-text">{{car.brand}}</td>
+                        <td class="plain-text">
+                            <img
+                                src="{{getLogo(car.brand)}}"
+                                alt="{{car.brand}} logo"
+                                class="logo"
+                            />
+                        </td>
                         <td class="plain-text">{{car.total}}</td>
                         <td>
                             <div class="acciones-menu" cdkMenu>
