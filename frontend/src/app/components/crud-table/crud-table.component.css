@@ -26,13 +26,19 @@
     background-color: rgb(207, 226, 255);
     border-collapse: collapse;
     border-radius: 20px;
-    margin: 5% auto;
+    margin: auto;
+    place-content: center;
 }
 
 th,
 td,
 caption {
     padding: 15px;
+}
+
+.logo {
+    width: 15%;
+    align-content: center;
 }
 
 .acciones-menu {

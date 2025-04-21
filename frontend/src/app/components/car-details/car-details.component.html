@@ -1,0 +1,62 @@
+<body>
+    <section class="car-detail-container">
+        <!-- Sección izquierda con detalles -->
+        <div class="left-section">
+            <section id="model-detail">
+                <h1>{{car.brand}} {{car.model}}</h1>
+                <div class="brand-model">
+                    @if (car.total == 1) {
+                        <h3>{{car.total}} unidad</h3>
+                    } @else {
+                        <h3>{{car.total}} unidades</h3>
+                    }
+                </div>
+            </section>
+
+            <div class="units-container">
+                @for (item of car.carDetails; track $index) {
+                    <section class="unit-card">
+                        <div id="unit-detail">
+                            <p>
+                                <span
+                                    class="label"
+                                    >{{ item.mileage | carCondition }}</span
+                                >
+                            </p>
+                            <p>
+                                <span class="label">Precio:</span>
+                                {{ item.price | currency: item.currency :'symbol'}}
+                            </p>
+                            <p>
+                                <span class="label">Matrícula:</span>
+                                {{ item.licensePlate }}
+                            </p>
+                            <p>
+                                <span class="label">Año:</span>
+                                {{ item.manufactureYear }}
+                            </p>
+                            <p>
+                                <span class="label">Kilometraje:</span>
+                                {{ item.mileage | number : '1.2-2'}} Km
+                            </p>
+                            <p>
+                                <span class="label">Registro:</span>
+                                {{ item.registrationDate }}
+                            </p>
+                        </div>
+                        <button class="buy-button">Comprar</button>
+                    </section>
+                }
+            </div>
+        </div>
+
+        <!-- Sección derecha con imagen de fondo -->
+        <div class="right-section">
+            <img
+                src="{{backgroundImage}}"
+                alt="{{car.brand}} background"
+                class="brand-background"
+            />
+        </div>
+    </section>
+</body>
