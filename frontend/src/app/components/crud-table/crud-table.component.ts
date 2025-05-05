@@ -1,21 +1,28 @@
-import {CdkMenu, CdkMenuItem} from '@angular/cdk/menu';
 import {Component, OnInit} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from '@angular/router';
+import {ReusableButtonDirective} from '../../directives/reusable-button.directive';
 import {CAR_BRANDS} from '../../models/car-brands.interface';
 import {CarListResponse} from '../../models/car-list.interface';
+import {BrandsService} from '../../services/brands.service';
 import {CarsService} from '../../services/cars.service';
 @Component({
     selector: 'app-crud-table',
     standalone: true,
-    imports: [CdkMenu, CdkMenuItem, MatButtonModule, RouterModule],
+    imports: [RouterModule, ReusableButtonDirective],
     templateUrl: './crud-table.component.html',
     styleUrl: './crud-table.component.css',
 })
 export class CrudTableComponent implements OnInit {
     cars: CarListResponse[] = [];
 
-    constructor(private carsService: CarsService) {}
+    constructor(
+        private carsService: CarsService,
+        private brandsService: BrandsService,
+    ) {}
+
+    openDropdown() {
+        throw new Error('Method not implemented.');
+    }
 
     ngOnInit(): void {
         this.carsService.getCars().subscribe(resp => {

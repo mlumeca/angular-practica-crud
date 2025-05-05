@@ -1,44 +1,43 @@
-.title-text {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.subtitle-text {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.plain-text {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 16px;
-}
-
-.button-text {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-}
-
-.styled-table {
-    background-color: rgb(207, 226, 255);
-    border-collapse: collapse;
+.crud-table-container {
+    max-width: 90vw;
+    margin: 2vh auto;
+    background-color: white;
+    box-shadow: 0 0.2rem 1rem rgb(150, 150, 150);
     border-radius: 20px;
-    margin: auto;
-    place-content: center;
+    overflow: hidden;
 }
 
 th,
-td,
-caption {
+td {
+    text-align: center;
+    vertical-align: center;
+    width: 20vw;
     padding: 15px;
 }
 
+#create-new-btn {
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    margin-top: 1rem;
+    color: white;
+    font-size: 1rem;
+}
+
+#action-btn {
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    color: #2c8bca;
+    font-size: 1rem;
+}
+
+.logo-section {
+    width: 100%;
+}
+
 .logo {
-    width: 15%;
+    width: 5vw;
     align-content: center;
+    justify-content: center;
 }
 
 .acciones-menu {
