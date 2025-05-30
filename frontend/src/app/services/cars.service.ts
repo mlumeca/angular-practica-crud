@@ -23,7 +23,7 @@ export class CarsService {
         );
     }
 
-    createCar(car: CarByIdResponse): Observable<CarByIdResponse> {
+    createCar(car: Partial<CarByIdResponse>): Observable<CarByIdResponse> {
         return this.http.post<CarByIdResponse>(
             `${environment.apiBaseUrl}/cars`,
             car,

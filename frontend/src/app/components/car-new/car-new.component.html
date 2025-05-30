@@ -1,0 +1,268 @@
+<div class="page-container">
+    <div class="container">
+        <div class="title">
+            <h2>Añadir Nuevo Coche</h2>
+        </div>
+        <div class="form">
+            <form
+                [formGroup]="carForm"
+                (ngSubmit)="onSubmit()"
+                autocomplete="off"
+            >
+                <div class="required">
+                    <!-- BRAND -->
+                    <div class="form-group">
+                        <label for="brand">Marca*: </label>
+                        <select
+                            id="brand"
+                            formControlName="brand"
+                            class="form-control"
+                        >
+                            <option value="" disabled selected hidden>
+                                Selecciona una marca
+                            </option>
+                            @for (brand of brandsSignal(); track brand) {
+                                <option [value]="brand">{{ brand }}</option>
+                            }
+                        </select>
+                        @if (
+                            carForm.get('brand')?.invalid && carForm.get('brand')?.touched
+                        ) {
+                            <div class="error-message">
+                                La marca es requerida.
+                            </div>
+                        }
+                    </div>
+
+                    <!-- MODEL -->
+                    <div class="form-group">
+                        <label for="model">Modelo*: </label>
+                        <select
+                            id="model"
+                            formControlName="model"
+                            class="form-control"
+                        >
+                            <option value="" disabled selected hidden>
+                                Selecciona un modelo
+                            </option>
+                            @for (model of modelsSignal(); track model) {
+                                <option [value]="model">{{ model }}</option>
+                            }
+                        </select>
+                        @if (
+                            carForm.get('model')?.invalid && carForm.get('model')?.touched
+                        ) {
+                            <div class="error-message">
+                                El modelo es requerido.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- formarray, ejemplo con un formgroup -->
+                <div formArrayName="carDetails">
+                    @for (
+                        carDetail of carDetails.controls;
+                        track $index;
+                        let i = $index
+                    ) {
+                        <div [formGroupName]="i" class="optional-menu">
+                            <div class="details">
+                                <div class="title">
+                                    <h3>Detalles del coche: {{i}}</h3>
+                                </div>
+
+                                <!-- REGISTRATION DATE -->
+                                <div class="form-group">
+                                    <label for="registrationDate-{{i}}"
+                                        >Fecha de registro:
+                                    </label>
+                                    <input
+                                        type="date"
+                                        id="registrationDate-{{i}}"
+                                        formControlName="registrationDate"
+                                        class="form-control"
+                                        placeholder=""
+                                    />
+
+                                    @if (
+                                        carDetailsForm.at(i).get('registrationDate')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            La fecha de registro es requerida.
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- MANUFACTURE YEAR -->
+                                <div class="form-group">
+                                    <label for="year-{{i}}"
+                                        >Año de Fabricación:
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="year-{{i}}"
+                                        formControlName="manufactureYear"
+                                        class="form-control"
+                                        placeholder="1900"
+                                        value=""
+                                    />
+                                    @if (
+                                        carDetailsForm.at(i).get('manufactureYear')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            Introduce un año válido.
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- MILEAGE -->
+                                <div class="form-group">
+                                    <label for="mileage-{{i}}"
+                                        >Kilometraje:
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="mileage-{{i}}"
+                                        formControlName="mileage"
+                                        class="form-control"
+                                        placeholder="0"
+                                    />
+                                    @if (
+                                        carDetailsForm.at(i).get('mileage')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            El kilometraje debe ser un número
+                                            positivo.
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- LICENSE PLATE -->
+                                <div class="form-group">
+                                    <label for="licensePlate-{{i}}"
+                                        >Matrícula:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="licensePlate-{{i}}"
+                                        formControlName="licensePlate"
+                                        class="form-control"
+                                        placeholder="0000 AAA"
+                                    />
+                                    @if (
+                                        carDetailsForm.at(i).get('licensePlate')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            La matrícula debe ser alfanumérica
+                                            (máximo 7 caracteres).
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- CURRENCY -->
+                                <div class="form-group">
+                                    <label for="currency-{{i}}">Moneda: </label>
+                                    <input
+                                        type="text"
+                                        id="currency-{{i}}"
+                                        formControlName="currency"
+                                        class="form-control"
+                                        placeholder="Escribe una moneda"
+                                    />
+
+                                    @if (filteredCurrencies().length > 0) {
+                                        <div class="autocomplete-list">
+                                            <ul>
+                                                @for (
+                                                    currency of filteredCurrencies();
+                                                    track currency.code
+                                                ) {
+                                                    <li>
+                                                        {{ currency.code }}
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+
+                                    @if (
+                                        carDetailsForm.at(i).get('currency')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            La moneda debe seguir el ISO 4217.
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- PRICE -->
+                                <div class="form-group">
+                                    <label for="price-{{i}}">Precio: </label>
+                                    <input
+                                        type="number"
+                                        id="price-{{i}}"
+                                        formControlName="price"
+                                        class="form-control"
+                                        placeholder="0"
+                                    />
+                                    @if (
+                                        carDetailsForm.at(i).get('price')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            El precio debe ser un número
+                                            positivo.
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- AVAILABILITY -->
+                                <div class="form-group">
+                                    <label for="availability-{{i}}"
+                                        >Disponibilidad:
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        id="availability-{{i}}"
+                                        formControlName="availability"
+                                        class="form-control"
+                                    />
+                                </div>
+
+                                <!-- DELETE -->
+                                <div>
+                                    <button
+                                        id="delete-btn"
+                                        appReusableButton
+                                        buttonType="stroked"
+                                        (click)="removeCarDetail(i)"
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <!-- NEW CAR DETAILS -->
+                <div class="btn-section">
+                    <div id="add-btn">
+                        <button type="button" (click)="createNewCar()">
+                            Añadir detalles del coche
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="btn-section">
+                    <div id="submit-btn">
+                        <button type="submit" [disabled]="carForm.invalid">
+                            Añadir Coche
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- {{carForm.value | json}} -->
