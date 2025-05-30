@@ -1,4 +1,4 @@
-import {JsonPipe} from '@angular/common';
+// import {JsonPipe} from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -26,7 +26,7 @@ import {formatDate} from '../../util/formatDates';
 
 @Component({
     selector: 'app-car-new',
-    imports: [ReactiveFormsModule, JsonPipe],
+    imports: [ReactiveFormsModule], // JsonPipe
     templateUrl: './car-new.component.html',
     styleUrl: './car-new.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -134,18 +134,16 @@ export class CarNewComponent implements OnInit {
         this.carDetails.push(form);
     }
 
+    removeCarDetail(index: number) {
+        this.carDetails.removeAt(index);
+    }
+
     onSubmit() {
         if (this.carForm.valid) {
+            // Capture form values before resetting
             const formValue = this.carForm.getRawValue();
-            this.carForm = this.formBuilder.group({
-                brand: ['', Validators.required],
-                model: [{value: '', disabled: true}, Validators.required],
-                carDetails: this.formBuilder.array<FormGroup<DetailsFormArray>>(
-                    [],
-                ),
-            });
 
-            // Transforma los detalles del coche
+            // Transform carDetails
             const transformedDetails = this.carDetails.controls.map(group => {
                 const carGroup = group as FormGroup<DetailsFormArray>;
                 const originalDate = carGroup.get('registrationDate')?.value;
@@ -164,29 +162,32 @@ export class CarNewComponent implements OnInit {
                 };
             });
 
+            // Create the new car object
             const newCar: Partial<CarByIdResponse> = {
                 brand: formValue.brand || '',
                 model: formValue.model || '',
                 carDetails: transformedDetails,
             };
 
-            // Depuración: Verificar el objeto enviado
+            // Debugging: Log the object to be sent
             console.log('Objeto enviado al backend:', newCar);
 
+            // Send to backend
             this.carsService.createCar(newCar as CarByIdResponse).subscribe({
                 next: createdCar => {
-                    // Depuración: Verificar la respuesta del backend
                     console.log('Respuesta del backend:', createdCar);
 
+                    // Update signal with new car
                     this.carSignal.update(cars => [...cars, createdCar]);
+
+                    // Reset form after successful submission
                     this.carForm.reset();
                     this.modelsSignal.set([]);
                     this.carForm.get('model')?.disable();
-                    this.filteredCurrencies.set(this.currencySignal()); // Restablecer sugerencias
+                    this.filteredCurrencies.set(this.currencySignal());
                     this.carDetails.clear();
-                    this.carDetails.push(this.createFormDetails()); // Añade un nuevo grupo vacío
+                    this.carDetails.push(this.createFormDetails()); // Add an empty group
                 },
-
                 error: err => console.error('Error al crear coche:', err),
             });
         }

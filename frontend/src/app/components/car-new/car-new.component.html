@@ -169,14 +169,10 @@
                                         formControlName="currency"
                                         class="form-control"
                                         placeholder="Escribe una moneda"
-                                        #autoCompleteInput
                                     />
 
                                     @if (filteredCurrencies().length > 0) {
-                                        <div
-                                            hidden="isShown"
-                                            class="autocomplete-list"
-                                        >
+                                        <div class="autocomplete-list">
                                             <ul>
                                                 @for (
                                                     currency of filteredCurrencies();
@@ -233,8 +229,15 @@
                                 </div>
 
                                 <!-- DELETE -->
-                                <div id="delete-btn">
-                                    <button type="reset">Eliminar</button>
+                                <div>
+                                    <button
+                                        id="delete-btn"
+                                        appReusableButton
+                                        buttonType="stroked"
+                                        (click)="removeCarDetail(i)"
+                                    >
+                                        Eliminar
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -262,4 +265,4 @@
     </div>
 </div>
 
-{{carForm.value | json}}
+<!-- {{carForm.value | json}} -->

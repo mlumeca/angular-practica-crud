@@ -1,59 +1,68 @@
-<div>
-    <div class="">
-        <table class="styled-table">
-            <caption class="title-text">
-                Coches de la API
-            </caption>
+<div class="page-container">
+    <div class="btn-section">
+        <button
+            appReusableButton
+            buttonType="flat"
+            id="create-new-btn"
+            routerLink="/new"
+        >
+            Crear Nuevo
+        </button>
+    </div>
+    <div class="crud-table-container">
+        <table>
             <thead>
                 <tr>
-                    <th class="subtitle-text">ID</th>
-                    <th class="subtitle-text">Marca</th>
-                    <th class="subtitle-text">Modelo</th>
-                    <th class="subtitle-text">Total</th>
-                    <th class="subtitle-text">Acciones</th>
+                    <th>ID</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @for (car of cars; track car.id) {
-                    <tr [routerLink]="['/cars', car.id]">
-                        <td class="plain-text">{{car.id}}</td>
-                        <td class="plain-text">{{car.model}}</td>
-                        <td class="plain-text">
-                            <img
-                                src="{{getLogo(car.brand)}}"
-                                alt="{{car.brand}} logo"
-                                class="logo"
-                            />
-                        </td>
-                        <td class="plain-text">{{car.total}}</td>
+                    <tr>
                         <td>
-                            <div class="acciones-menu" cdkMenu>
-                                <button
-                                    class="acciones-menu-item"
-                                    routerLink="/edit"
-                                    class="plain-text"
-                                    cdkMenuItem
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    class="acciones-menu-item"
-                                    routerLink="/delete"
-                                    class="plain-text"
-                                    cdkMenuItem
-                                >
-                                    Eliminar
-                                </button>
+                            <a href="/cars/{{car.id}}">{{car.id}}</a>
+                        </td>
+
+                        <td>
+                            <div class="logo-section">
+                                <img
+                                    src="{{getLogo(car.brand)}}"
+                                    alt="{{car.brand}} logo"
+                                    class="logo"
+                                />
                             </div>
+                        </td>
+                        <td>{{car.model}}</td>
+                        <td>{{car.total}}</td>
+                        <td>
+                            <button
+                                appReusableButton
+                                buttonType="stroked"
+                                class="dropdown-toggle"
+                                #trigger
+                                (click)="openDropdown()"
+                                id="action-btn"
+                            >
+                                Acciones
+                            </button>
+                            <ng-template cdkPortal>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item">
+                                        <a href="/edit">Editar</a>
+                                    </button>
+                                    <button class="dropdown-item">
+                                        <a href="/delete">Eliminar</a>
+                                    </button>
+                                </div>
+                            </ng-template>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    </div>
-    <div>
-        <button routerLink="/create" mat-stroked-button class="button-text">
-            Crear Nuevo
-        </button>
     </div>
 </div>
