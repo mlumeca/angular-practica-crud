@@ -1,17 +1,10 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "Arial", sans-serif;
-    background-color: #f5f5f5;
-}
-
 .car-detail-container {
     display: flex;
     max-width: 90vw;
     margin: 2vh auto;
     height: 96vh;
     background-color: white;
-    box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 1);
+    box-shadow: 0 0.2rem 1rem rgb(150, 150, 150);
     border-radius: 20px;
     overflow: hidden;
 }
@@ -31,22 +24,9 @@ body {
     margin-bottom: 2rem;
 }
 
-h1 {
-    color: #2c3e50;
-    font-size: 2.5rem;
-    margin: 0 0 1rem 0;
-}
-
 .brand-model {
     display: flex;
     gap: 1.5rem;
-}
-
-h3 {
-    color: #666;
-    font-size: 1.2rem;
-    margin: 0;
-    font-weight: 500;
 }
 
 .units-container {
@@ -67,39 +47,22 @@ h3 {
     box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
 }
 
-#unit-detail p {
-    margin: 0.7rem 0;
-    color: #333;
-    font-size: 1rem;
-}
-
 .label {
     font-weight: 600;
     color: #2c3e50;
     margin-right: 0.5rem;
 }
 
-.buy-button {
-    background-color: #2c8bca;
-    color: white;
-    border: none;
+#buy-btn {
     padding: 0.8rem 1.5rem;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
     width: 100%;
     margin-top: 1rem;
-}
-
-.buy-button:hover {
-    background-color: #196293;
+    color: white;
+    font-size: 1rem;
 }
 
 .brand-background {
     width: 100%;
-    align-content: center;
-    justify-content: center;
 }
 
 /* Media Queries para responsividad */
@@ -117,6 +80,7 @@ h3 {
 
     .right-section {
         flex: 1;
+        width: 100%;
         background-size: 100% auto;
         background-position: center;
         background-repeat: no-repeat;
@@ -155,19 +119,7 @@ h3 {
         padding: 1rem;
     }
 
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    h3 {
-        font-size: 0.9rem;
-    }
-
-    #unit-detail p {
-        font-size: 0.9rem;
-    }
-
-    .buy-button {
+    #buy-button {
         font-size: 0.9rem;
     }
 

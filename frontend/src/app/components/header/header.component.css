@@ -1,0 +1,9 @@
+section {
+    display: flex;
+    justify-content: center;
+    padding: 1vw;
+    margin: 0 0 1vw 0;
+    background-color: white;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 0.2rem 1rem rgb(150, 150, 150);
+}

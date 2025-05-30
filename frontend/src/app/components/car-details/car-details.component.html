@@ -3,7 +3,7 @@
         <!-- Sección izquierda con detalles -->
         <div class="left-section">
             <section id="model-detail">
-                <h1>{{car.brand}} {{car.model}}</h1>
+                <h2>{{car.brand}} {{car.model}}</h2>
                 <div class="brand-model">
                     @if (car.total == 1) {
                         <h3>{{car.total}} unidad</h3>
@@ -44,7 +44,13 @@
                                 {{ item.registrationDate }}
                             </p>
                         </div>
-                        <button class="buy-button">Comprar</button>
+                        <button
+                            appReusableButton
+                            buttonType="flat"
+                            id="buy-btn"
+                        >
+                            Comprar
+                        </button>
                     </section>
                 }
             </div>
