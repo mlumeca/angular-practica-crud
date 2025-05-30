@@ -1,4 +1,4 @@
-<body>
+<div class="page-container">
     <div class="container">
         <div class="title">
             <h2>Añadir Nuevo Coche</h2>
@@ -11,7 +11,7 @@
             >
                 <div class="required">
                     <!-- BRAND -->
-                    <div class="form-group brand">
+                    <div class="form-group">
                         <label for="brand">Marca*: </label>
                         <select
                             id="brand"
@@ -28,11 +28,14 @@
                         @if (
                             carForm.get('brand')?.invalid && carForm.get('brand')?.touched
                         ) {
-                            <div class="error">La marca es requerida.</div>
+                            <div class="error-message">
+                                La marca es requerida.
+                            </div>
                         }
                     </div>
+
                     <!-- MODEL -->
-                    <div class="form-group model">
+                    <div class="form-group">
                         <label for="model">Modelo*: </label>
                         <select
                             id="model"
@@ -49,189 +52,214 @@
                         @if (
                             carForm.get('model')?.invalid && carForm.get('model')?.touched
                         ) {
-                            <div class="error">El modelo es requerido.</div>
+                            <div class="error-message">
+                                El modelo es requerido.
+                            </div>
                         }
                     </div>
                 </div>
 
-                <div class="btn-section">
-                    <div id="add-btn">
-                        <button (click)="createNewCar()">Nuevo Coche</button>
-                    </div>
-                </div>
+                <!-- formarray, ejemplo con un formgroup -->
+                <div formArrayName="carDetails">
+                    @for (
+                        carDetail of carDetails.controls;
+                        track $index;
+                        let i = $index
+                    ) {
+                        <div [formGroupName]="i" class="optional-menu">
+                            <div class="details">
+                                <div class="title">
+                                    <h3>Detalles del coche: {{i}}</h3>
+                                </div>
 
-                @for (control of carDetails.controls; track $index) {
-                    <!-- formarray -->
-                    <div class="optional-menu">
-                        <div class="details">
-                            <div class="title">
-                                <h3>Detalles del coche:</h3>
-                            </div>
-                            <section class="left-section">
                                 <!-- REGISTRATION DATE -->
                                 <div class="form-group">
-                                    <label for="registrationDate"
+                                    <label for="registrationDate-{{i}}"
                                         >Fecha de registro:
                                     </label>
                                     <input
                                         type="date"
-                                        id="registrationDate"
-                                        [formControl]="getCarDetailControl('registrationDate')"
+                                        id="registrationDate-{{i}}"
+                                        formControlName="registrationDate"
                                         class="form-control"
                                         placeholder=""
                                     />
+
                                     @if (
-                                        getCarDetailControl('registrationDate').invalid && getCarDetailControl('registrationDate').touched
+                                        carDetailsForm.at(i).get('registrationDate')?.invalid
                                     ) {
-                                        <div class="error">
+                                        <div class="error-message">
                                             La fecha de registro es requerida.
                                         </div>
                                     }
                                 </div>
-                                <!-- MILEAGE -->
+
+                                <!-- MANUFACTURE YEAR -->
                                 <div class="form-group">
-                                    <label for="mileage">Kilometraje: </label>
+                                    <label for="year-{{i}}"
+                                        >Año de Fabricación:
+                                    </label>
                                     <input
                                         type="number"
-                                        id="mileage"
-                                        [formControl]="getCarDetailControl('mileage')"
+                                        id="year-{{i}}"
+                                        formControlName="manufactureYear"
+                                        class="form-control"
+                                        placeholder="1900"
+                                        value=""
+                                    />
+                                    @if (
+                                        carDetailsForm.at(i).get('manufactureYear')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            Introduce un año válido.
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- MILEAGE -->
+                                <div class="form-group">
+                                    <label for="mileage-{{i}}"
+                                        >Kilometraje:
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="mileage-{{i}}"
+                                        formControlName="mileage"
                                         class="form-control"
                                         placeholder="0"
                                     />
                                     @if (
-                                        getCarDetailControl('mileage').invalid && getCarDetailControl('mileage').touched
+                                        carDetailsForm.at(i).get('mileage')?.invalid
                                     ) {
-                                        <div class="error">
+                                        <div class="error-message">
                                             El kilometraje debe ser un número
                                             positivo.
                                         </div>
                                     }
                                 </div>
-                                <!-- CURRENCY -->
+
+                                <!-- LICENSE PLATE -->
                                 <div class="form-group">
-                                    <label for="currency">Moneda: </label>
+                                    <label for="licensePlate-{{i}}"
+                                        >Matrícula:
+                                    </label>
                                     <input
                                         type="text"
-                                        id="currency"
-                                        [formControl]="getCarDetailControl('currency')"
+                                        id="licensePlate-{{i}}"
+                                        formControlName="licensePlate"
+                                        class="form-control"
+                                        placeholder="0000 AAA"
+                                    />
+                                    @if (
+                                        carDetailsForm.at(i).get('licensePlate')?.invalid
+                                    ) {
+                                        <div class="error-message">
+                                            La matrícula debe ser alfanumérica
+                                            (máximo 7 caracteres).
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- CURRENCY -->
+                                <div class="form-group">
+                                    <label for="currency-{{i}}">Moneda: </label>
+                                    <input
+                                        type="text"
+                                        id="currency-{{i}}"
+                                        formControlName="currency"
                                         class="form-control"
                                         placeholder="Escribe una moneda"
                                         #autoCompleteInput
                                     />
 
                                     @if (filteredCurrencies().length > 0) {
-                                        <ul class="autocomplete-list">
-                                            @for (
-                                                currency of filteredCurrencies();
-                                                track currency.code
-                                            ) {
-                                                <li
-                                                    (click)="selectCurrency(currency)"
-                                                >
-                                                    {{ currency.code }}
-                                                </li>
-                                            }
-                                        </ul>
+                                        <div
+                                            hidden="isShown"
+                                            class="autocomplete-list"
+                                        >
+                                            <ul>
+                                                @for (
+                                                    currency of filteredCurrencies();
+                                                    track currency.code
+                                                ) {
+                                                    <li>
+                                                        {{ currency.code }}
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
                                     }
 
                                     @if (
-                                        getCarDetailControl('currency').invalid && getCarDetailControl('currency').touched
+                                        carDetailsForm.at(i).get('currency')?.invalid
                                     ) {
-                                        <div class="error">
+                                        <div class="error-message">
                                             La moneda debe seguir el ISO 4217.
                                         </div>
                                     }
                                 </div>
-                            </section>
-                            <section class="right-section">
-                                <!-- MANUFACTURE YEAR -->
-                                <div class="form-group">
-                                    <label for="year"
-                                        >Año de Fabricación:
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="year"
-                                        [formControl]="getCarDetailControl('manufactureYear')"
-                                        class="form-control"
-                                        placeholder="1900"
-                                    />
-                                    @if (
-                                        getCarDetailControl('manufactureYear').invalid && getCarDetailControl('manufactureYear').touched
-                                    ) {
-                                        <div class="error">
-                                            Introduce un año válido.
-                                        </div>
-                                    }
-                                </div>
-                                <!-- LICENSE PLATE -->
-                                <div class="form-group">
-                                    <label for="licensePlate"
-                                        >Matrícula:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="licensePlate"
-                                        [formControl]="getCarDetailControl('licensePlate')"
-                                        class="form-control"
-                                        placeholder="0000 AAA"
-                                    />
-                                    @if (
-                                        getCarDetailControl('licensePlate').invalid && getCarDetailControl('licensePlate').touched
-                                    ) {
-                                        <div class="error">
-                                            La matrícula debe ser alfanumérica
-                                            (máximo 7 caracteres).
-                                        </div>
-                                    }
-                                </div>
+
                                 <!-- PRICE -->
                                 <div class="form-group">
-                                    <label for="price">Precio: </label>
+                                    <label for="price-{{i}}">Precio: </label>
                                     <input
                                         type="number"
-                                        id="price"
-                                        [formControl]="getCarDetailControl('price')"
+                                        id="price-{{i}}"
+                                        formControlName="price"
                                         class="form-control"
                                         placeholder="0"
                                     />
                                     @if (
-                                        getCarDetailControl('price').invalid && getCarDetailControl('price').touched
+                                        carDetailsForm.at(i).get('price')?.invalid
                                     ) {
-                                        <div class="error">
+                                        <div class="error-message">
                                             El precio debe ser un número
                                             positivo.
                                         </div>
                                     }
                                 </div>
-                            </section>
-                        </div>
-                        <!-- SUBMIT -->
-                        <div class="btn-section">
-                            <div id="submit-btn">
-                                <button
-                                    type="submit"
-                                    [disabled]="carForm.invalid"
-                                >
-                                    Añadir Coche
-                                </button>
+
+                                <!-- AVAILABILITY -->
+                                <div class="form-group">
+                                    <label for="availability-{{i}}"
+                                        >Disponibilidad:
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        id="availability-{{i}}"
+                                        formControlName="availability"
+                                        class="form-control"
+                                    />
+                                </div>
+
+                                <!-- DELETE -->
+                                <div id="delete-btn">
+                                    <button type="reset">Eliminar</button>
+                                </div>
                             </div>
                         </div>
+                    }
+                </div>
+                <!-- NEW CAR DETAILS -->
+                <div class="btn-section">
+                    <div id="add-btn">
+                        <button type="button" (click)="createNewCar()">
+                            Añadir detalles del coche
+                        </button>
                     </div>
-                }
+                </div>
+
+                <!-- SUBMIT -->
+                <div class="btn-section">
+                    <div id="submit-btn">
+                        <button type="submit" [disabled]="carForm.invalid">
+                            Añadir Coche
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
-        <h3 class="mt-4">Coches Añadidos</h3>
-        @if (carSignal().length > 0) {
-            @for (item of carSignal(); track item.id) {
-                <li>
-                    {{ item.brand }} {{ item.model }} -
-                    {{ item.carDetails[0].mileage }} km, Matrícula:
-                    {{ item.carDetails[0].licensePlate }}
-                </li>
-            }
-        } @else {
-            <p>No hay coches añadidos.</p>
-        }
     </div>
-</body>
+</div>
+
+{{carForm.value | json}}

@@ -1,3 +1,4 @@
+import {JsonPipe} from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -8,13 +9,12 @@ import {
 import {
     FormArray,
     FormBuilder,
-    FormControl,
     FormGroup,
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import {v4 as uuidv4} from 'uuid';
 import {CarByIdResponse} from '../../models/car-by-id.interface';
+import {DetailsFormArray} from '../../models/car-details-array.interface';
 import {
     CurrencyList,
     ISO_CURRENCIES_CODE,
@@ -22,20 +22,19 @@ import {
 import {ModelByBrandResponse} from '../../models/model-by-brand.interface';
 import {BrandsService} from '../../services/brands.service';
 import {CarsService} from '../../services/cars.service';
+import {formatDate} from '../../util/formatDates';
 
 @Component({
     selector: 'app-car-new',
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, JsonPipe],
     templateUrl: './car-new.component.html',
     styleUrl: './car-new.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarNewComponent implements OnInit {
-    readonly fb = inject(FormBuilder);
+    readonly formBuilder = inject(FormBuilder);
     readonly carsService = inject(CarsService);
     readonly brandsService = inject(BrandsService);
-
-    carForm: FormGroup = this.fb.group({});
     brandsSignal = signal<string[]>([]);
     modelsSignal = signal<ModelByBrandResponse[]>([]);
     carSignal = signal<CarByIdResponse[]>([]);
@@ -43,41 +42,16 @@ export class CarNewComponent implements OnInit {
     filteredCurrencies = signal<CurrencyList[]>([]);
     currentYear = new Date().getFullYear();
     clicks: number[] = [];
+    isShown = false;
 
-    ngOnInit(): void {
-        // Inicializar formulario
-        this.carForm = this.fb.group({
-            brand: ['', Validators.required],
-            model: [{value: '', disabled: true}, Validators.required],
-            carDetails: this.fb.array([
-                this.fb.group({
-                    availability: [false],
-                    currency: [
-                        '',
-                        [Validators.required, Validators.pattern(/^[A-Z]{3}$/)],
-                    ],
-                    registrationDate: ['', Validators.required],
-                    manufactureYear: [
-                        '',
-                        [
-                            Validators.required,
-                            Validators.min(1900),
-                            Validators.max(this.currentYear),
-                        ],
-                    ],
-                    mileage: ['', [Validators.required, Validators.min(0)]],
-                    licensePlate: [
-                        '',
-                        [
-                            Validators.required,
-                            Validators.pattern(/^[A-Z0-9]{1,7}$/),
-                        ],
-                    ],
-                    price: ['', [Validators.required, Validators.min(0)]],
-                }),
-            ]),
-        });
+    // Se inicializa del tirón
+    carForm = this.formBuilder.group({
+        brand: ['', Validators.required],
+        model: [{value: '', disabled: true}, Validators.required],
+        carDetails: this.formBuilder.array<FormGroup<DetailsFormArray>>([]),
+    });
 
+    ngOnInit() {
         // Cargar marcas
         this.brandsService.getBrands().subscribe(resp => {
             this.brandsSignal.set(resp);
@@ -100,36 +74,27 @@ export class CarNewComponent implements OnInit {
                 modelControl?.reset();
             }
         });
-
-        // Escuchar cambios en currency para filtrar sugerencias
-        this.getCarDetailControl('currency').valueChanges.subscribe(value => {
-            if (value) {
-                const filtered = this.currencySignal().filter(currency =>
-                    currency.code.toLowerCase().includes(value.toLowerCase()),
-                );
-                this.filteredCurrencies.set(filtered);
-            } else {
-                this.filteredCurrencies.set(this.currencySignal());
-            }
-        });
     }
 
-    // Getter para acceder al FormArray de CarDetails
-    get carDetails(): FormArray {
-        return this.carForm.get('carDetails') as FormArray;
-    } // a este hay que hacer push
+    // Getters
+    get carDetailsForm() {
+        return this.carForm.controls.carDetails;
+    }
 
-    // Función auxiliar para obtener controles de carDetails como FormControl
-    getCarDetailControl(field: string): FormControl {
-        const control = this.carDetails.at(0).get(field);
-        if (!control) {
-            throw new Error(`Control ${field} not found in carDetails`);
-        }
-        return control as FormControl;
+    get brandControl() {
+        return this.carForm.controls.brand;
+    }
+
+    get modelControl() {
+        return this.carForm.controls.model;
+    }
+
+    get carDetails() {
+        return this.carForm.get('carDetails') as FormArray;
     }
 
     // Cargar modelos
-    loadModels(): void {
+    loadModels() {
         const brand = this.carForm.get('brand')?.value;
         if (brand) {
             this.brandsService.getModelByBrand(brand).subscribe(models => {
@@ -138,34 +103,90 @@ export class CarNewComponent implements OnInit {
         }
     }
 
-    createNewCar(): void {
-        this.clicks.push(this.clicks.length + 1); // me tengo que crear un formgroup que corresponda con el cardetails y hacerle push al formarray y en el bucle haces el for sobre los controles del fromarray
+    // Crear menu Details
+    createFormDetails() {
+        return this.formBuilder.group({
+            availability: [false],
+            currency: [
+                '',
+                [Validators.required, Validators.pattern(/^[A-Z]{3}$/)],
+            ],
+            registrationDate: ['', [Validators.required]],
+            manufactureYear: [
+                '',
+                [
+                    Validators.required,
+                    Validators.min(1900),
+                    Validators.max(this.currentYear),
+                ],
+            ],
+            mileage: ['', [Validators.required, Validators.min(0)]],
+            licensePlate: [
+                '',
+                [Validators.required, Validators.pattern(/^[A-Z0-9]{1,7}$/)],
+            ], // Formato español
+            price: ['', [Validators.required, Validators.min(0)]],
+        });
     }
 
-    // Seleccionar una moneda del autocompletado
-    selectCurrency(currency: CurrencyList): void {
-        this.getCarDetailControl('currency').setValue(currency.code);
-        this.filteredCurrencies.set([]); // Ocultar sugerencias tras seleccionar
+    createNewCar() {
+        const form = this.createFormDetails();
+        this.carDetails.push(form);
     }
 
-    onSubmit(): void {
+    onSubmit() {
         if (this.carForm.valid) {
-            const formValue = this.carForm.getRawValue(); // Incluir controles deshabilitados
-            const newCar: CarByIdResponse = {
-                brand: formValue.brand,
-                model: formValue.model,
-                id: uuidv4(),
-                total: this.carSignal().length + 1,
-                carDetails: formValue.carDetails,
+            const formValue = this.carForm.getRawValue();
+            this.carForm = this.formBuilder.group({
+                brand: ['', Validators.required],
+                model: [{value: '', disabled: true}, Validators.required],
+                carDetails: this.formBuilder.array<FormGroup<DetailsFormArray>>(
+                    [],
+                ),
+            });
+
+            // Transforma los detalles del coche
+            const transformedDetails = this.carDetails.controls.map(group => {
+                const carGroup = group as FormGroup<DetailsFormArray>;
+                const originalDate = carGroup.get('registrationDate')?.value;
+
+                return {
+                    registrationDate: originalDate
+                        ? formatDate(originalDate)
+                        : '',
+                    manufactureYear:
+                        carGroup.get('manufactureYear')?.value ?? 1900,
+                    mileage: carGroup.get('mileage')?.value ?? 0,
+                    licensePlate: carGroup.get('licensePlate')?.value ?? '',
+                    currency: carGroup.get('currency')?.value ?? '',
+                    price: carGroup.get('price')?.value ?? 0,
+                    availability: carGroup.get('availability')?.value ?? false,
+                };
+            });
+
+            const newCar: Partial<CarByIdResponse> = {
+                brand: formValue.brand || '',
+                model: formValue.model || '',
+                carDetails: transformedDetails,
             };
-            this.carsService.createCar(newCar).subscribe({
+
+            // Depuración: Verificar el objeto enviado
+            console.log('Objeto enviado al backend:', newCar);
+
+            this.carsService.createCar(newCar as CarByIdResponse).subscribe({
                 next: createdCar => {
+                    // Depuración: Verificar la respuesta del backend
+                    console.log('Respuesta del backend:', createdCar);
+
                     this.carSignal.update(cars => [...cars, createdCar]);
                     this.carForm.reset();
                     this.modelsSignal.set([]);
                     this.carForm.get('model')?.disable();
                     this.filteredCurrencies.set(this.currencySignal()); // Restablecer sugerencias
+                    this.carDetails.clear();
+                    this.carDetails.push(this.createFormDetails()); // Añade un nuevo grupo vacío
                 },
+
                 error: err => console.error('Error al crear coche:', err),
             });
         }
