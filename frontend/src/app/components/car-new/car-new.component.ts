@@ -1,4 +1,4 @@
-// import {JsonPipe} from '@angular/common';
+import {JsonPipe} from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -13,6 +13,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
+import {Router} from '@angular/router';
 import {CarByIdResponse} from '../../models/car-by-id.interface';
 import {DetailsFormArray} from '../../models/car-details-array.interface';
 import {
@@ -23,10 +24,11 @@ import {ModelByBrandResponse} from '../../models/model-by-brand.interface';
 import {BrandsService} from '../../services/brands.service';
 import {CarsService} from '../../services/cars.service';
 import {formatDate} from '../../util/formatDates';
+import {manufactureYearValidator} from '../../util/manufactureYearValidator';
 
 @Component({
     selector: 'app-car-new',
-    imports: [ReactiveFormsModule], // JsonPipe
+    imports: [ReactiveFormsModule, JsonPipe], // JsonPipe
     templateUrl: './car-new.component.html',
     styleUrl: './car-new.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +37,7 @@ export class CarNewComponent implements OnInit {
     readonly formBuilder = inject(FormBuilder);
     readonly carsService = inject(CarsService);
     readonly brandsService = inject(BrandsService);
+    readonly router = inject(Router);
     brandsSignal = signal<string[]>([]);
     modelsSignal = signal<ModelByBrandResponse[]>([]);
     carSignal = signal<CarByIdResponse[]>([]);
@@ -105,28 +108,34 @@ export class CarNewComponent implements OnInit {
 
     // Crear menu Details
     createFormDetails() {
-        return this.formBuilder.group({
-            availability: [false],
-            currency: [
-                '',
-                [Validators.required, Validators.pattern(/^[A-Z]{3}$/)],
-            ],
-            registrationDate: ['', [Validators.required]],
-            manufactureYear: [
-                '',
-                [
-                    Validators.required,
-                    Validators.min(1900),
-                    Validators.max(this.currentYear),
+        return this.formBuilder.group(
+            {
+                availability: [false],
+                currency: ['', [Validators.required]],
+                registrationDate: ['', [Validators.required]],
+                manufactureYear: [
+                    '',
+                    [
+                        Validators.required,
+                        Validators.min(1900),
+                        Validators.max(this.currentYear),
+                    ],
                 ],
-            ],
-            mileage: ['', [Validators.required, Validators.min(0)]],
-            licensePlate: [
-                '',
-                [Validators.required, Validators.pattern(/^[A-Z0-9]{1,7}$/)],
-            ], // Formato español
-            price: ['', [Validators.required, Validators.min(0)]],
-        });
+                mileage: ['', [Validators.required, Validators.min(0)]],
+                licensePlate: [
+                    '',
+                    [
+                        Validators.required,
+                        Validators.pattern(/^[0-9]{4}[ -]?[A-HJ-NP-Z]{3}$/),
+                    ],
+                ], // Formato español
+                price: ['', [Validators.required, Validators.min(1)]],
+            },
+            // validator global
+            {
+                validators: [manufactureYearValidator],
+            },
+        );
     }
 
     createNewCar() {
@@ -182,14 +191,10 @@ export class CarNewComponent implements OnInit {
 
                     // Reset form after successful submission
                     this.carForm.reset();
-                    this.modelsSignal.set([]);
-                    this.carForm.get('model')?.disable();
-                    this.filteredCurrencies.set(this.currencySignal());
-                    this.carDetails.clear();
-                    this.carDetails.push(this.createFormDetails()); // Add an empty group
                 },
                 error: err => console.error('Error al crear coche:', err),
             });
+            this.router.navigateByUrl('/home');
         }
     }
 }

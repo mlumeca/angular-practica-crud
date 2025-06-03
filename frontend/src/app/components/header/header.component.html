@@ -1,3 +1,19 @@
 <section>
-    <h1>CRUD Table</h1>
+    <h1>{{ title }}</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li
+                *ngFor="let crumb of breadcrumbs; let last = last"
+                class="breadcrumb-item"
+                [ngClass]="{'active': last}"
+            >
+                <a
+                    *ngIf="!last && crumb.url"
+                    [routerLink]="crumb.url"
+                    >{{ crumb.label }}</a
+                >
+                <span *ngIf="last || !crumb.url">{{ crumb.label }}</span>
+            </li>
+        </ol>
+    </nav>
 </section>
