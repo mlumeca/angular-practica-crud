@@ -69,7 +69,7 @@
                         <div [formGroupName]="i" class="optional-menu">
                             <div class="details">
                                 <div class="title">
-                                    <h3>Detalles del coche: {{i}}</h3>
+                                    <h3>Detalles del coche {{i + 1}}</h3>
                                 </div>
 
                                 <!-- REGISTRATION DATE -->
@@ -86,7 +86,7 @@
                                     />
 
                                     @if (
-                                        carDetailsForm.at(i).get('registrationDate')?.invalid
+                                        carDetailsForm.at(i).get('registrationDate')?.invalid && carDetailsForm.at(i).get('registrationDate')?.touched
                                     ) {
                                         <div class="error-message">
                                             La fecha de registro es requerida.
@@ -108,7 +108,7 @@
                                         value=""
                                     />
                                     @if (
-                                        carDetailsForm.at(i).get('manufactureYear')?.invalid
+                                        carDetailsForm.at(i).get('manufactureYear')?.invalid && carDetailsForm.at(i).get('manufactureYear')?.touched
                                     ) {
                                         <div class="error-message">
                                             Introduce un año válido.
@@ -129,7 +129,7 @@
                                         placeholder="0"
                                     />
                                     @if (
-                                        carDetailsForm.at(i).get('mileage')?.invalid
+                                        carDetailsForm.at(i).get('mileage')?.invalid && carDetailsForm.at(i).get('mileage')?.touched
                                     ) {
                                         <div class="error-message">
                                             El kilometraje debe ser un número
@@ -148,14 +148,14 @@
                                         id="licensePlate-{{i}}"
                                         formControlName="licensePlate"
                                         class="form-control"
-                                        placeholder="0000 AAA"
+                                        placeholder="0000AAA"
                                     />
                                     @if (
-                                        carDetailsForm.at(i).get('licensePlate')?.invalid
+                                        carDetailsForm.at(i).get('licensePlate')?.invalid && carDetailsForm.at(i).get('licensePlate')?.touched
                                     ) {
                                         <div class="error-message">
-                                            La matrícula debe ser alfanumérica
-                                            (máximo 7 caracteres).
+                                            La matrícula debe seguir el formato
+                                            español.
                                         </div>
                                     }
                                 </div>
@@ -163,34 +163,34 @@
                                 <!-- CURRENCY -->
                                 <div class="form-group">
                                     <label for="currency-{{i}}">Moneda: </label>
-                                    <input
-                                        type="text"
+                                    <select
                                         id="currency-{{i}}"
                                         formControlName="currency"
                                         class="form-control"
-                                        placeholder="Escribe una moneda"
-                                    />
-
-                                    @if (filteredCurrencies().length > 0) {
-                                        <div class="autocomplete-list">
-                                            <ul>
-                                                @for (
-                                                    currency of filteredCurrencies();
-                                                    track currency.code
-                                                ) {
-                                                    <li>
-                                                        {{ currency.code }}
-                                                    </li>
-                                                }
-                                            </ul>
-                                        </div>
-                                    }
+                                    >
+                                        <option
+                                            value=""
+                                            disabled
+                                            selected
+                                            hidden
+                                        >
+                                            Selecciona una moneda
+                                        </option>
+                                        @for (
+                                            currency of filteredCurrencies();
+                                            track currency.code
+                                        ) {
+                                            <option [value]="currency.code">
+                                                {{ currency.code }}
+                                            </option>
+                                        }
+                                    </select>
 
                                     @if (
-                                        carDetailsForm.at(i).get('currency')?.invalid
+                                        carDetailsForm.at(i).get('currency')?.invalid && carDetailsForm.at(i).get('currency')?.touched
                                     ) {
                                         <div class="error-message">
-                                            La moneda debe seguir el ISO 4217.
+                                            La moneda es obligatoria.
                                         </div>
                                     }
                                 </div>
@@ -203,10 +203,10 @@
                                         id="price-{{i}}"
                                         formControlName="price"
                                         class="form-control"
-                                        placeholder="0"
+                                        placeholder="1"
                                     />
                                     @if (
-                                        carDetailsForm.at(i).get('price')?.invalid
+                                        carDetailsForm.at(i).get('price')?.invalid && carDetailsForm.at(i).get('price')?.touched
                                     ) {
                                         <div class="error-message">
                                             El precio debe ser un número
@@ -233,7 +233,7 @@
                                     <button
                                         id="delete-btn"
                                         appReusableButton
-                                        buttonType="stroked"
+                                        buttonType="flat"
                                         (click)="removeCarDetail(i)"
                                     >
                                         Eliminar
@@ -255,7 +255,13 @@
                 <!-- SUBMIT -->
                 <div class="btn-section">
                     <div id="submit-btn">
-                        <button type="submit" [disabled]="carForm.invalid">
+                        <button
+                            appReusableButton
+                            buttonType="flat"
+                            type="submit"
+                            [disabled]="carForm.invalid"
+                            routerLink="/home"
+                        >
                             Añadir Coche
                         </button>
                     </div>
@@ -265,4 +271,4 @@
     </div>
 </div>
 
-<!-- {{carForm.value | json}} -->
+{{carForm.value | json}}
