@@ -20,8 +20,22 @@ export class CrudTableComponent implements OnInit {
         private brandsService: BrandsService,
     ) {}
 
-    openDropdown() {
-        throw new Error('Method not implemented.');
+    /* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
+
+    openDropdown(id: string) {
+        const template = `
+        <div id="myDropdown" class="dropdown-content">
+            <a href="/cars/edit/${id}">Editar</a>
+            <a href="/delete">Eliminar</a>
+        </div>`;
+
+        const container = document.getElementById('dropdown');
+
+        if (container) {
+            container.innerHTML = template;
+        } else {
+            console.error('No se encontró el contenedor para el dropdown.');
+        }
     }
 
     ngOnInit(): void {

@@ -1,0 +1,51 @@
+.form {
+    position: relative;
+    display: block;
+}
+
+.form-group {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 1rem;
+    margin: 1rem 3rem;
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 35%;
+}
+
+.form-group:hover {
+    box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    border-radius: 20px;
+    padding: 2px;
+    font-size: large;
+    width: 50%;
+    height: 1.5rem;
+}
+
+label {
+    font-size: large;
+    width: 35%;
+}
+
+.required,
+.details {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.optional-menu {
+    background-color: #e4e4e4;
+    border-radius: 20px;
+    margin: 2rem 0 0 0;
+}

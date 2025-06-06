@@ -39,26 +39,18 @@
                         <td>{{car.model}}</td>
                         <td>{{car.total}}</td>
                         <td>
-                            <button
-                                appReusableButton
-                                buttonType="stroked"
-                                class="dropdown-toggle"
-                                #trigger
-                                (click)="openDropdown()"
-                                id="action-btn"
-                            >
-                                Acciones
-                            </button>
-                            <ng-template cdkPortal>
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item">
-                                        <a href="/edit">Editar</a>
-                                    </button>
-                                    <button class="dropdown-item">
-                                        <a href="/delete">Eliminar</a>
-                                    </button>
-                                </div>
-                            </ng-template>
+                            <div class="dropdown" id="dropdown">
+                                <button
+                                    appReusableButton
+                                    buttonType="stroked"
+                                    class="dropdown-toggle"
+                                    #trigger
+                                    (click)="openDropdown(car.id)"
+                                    id="action-btn"
+                                >
+                                    Acciones
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 }
